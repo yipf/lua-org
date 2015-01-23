@@ -1,0 +1,211 @@
+	<html>
+	<head>
+	<title>Document for lua-org</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<style type="text/css">
+	
+	body{
+	background: #e7e7e7;
+	}
+	
+	ol,ul{
+	}
+	
+	div#toc {
+				border: black 3px solid;
+				width: 100%;
+				white-space: pre-wrap;
+	}
+	
+	.eq {
+		border: black 1px solid;'
+	}
+	
+	.eq_label{
+		float: right;
+	}
+	
+	.eq_body{
+		float: left;
+	}
+	
+		#title {
+				font-size: 180%;
+	}
+	
+h1
+{
+    font-size: 150%; 
+/*     border-bottom: #000 1px solid;  */
+	border-left: red 12px solid;
+}
+
+h2 
+{
+    font-size: 130%;
+/*     border-bottom: #000 1px solid;  */
+	border-left: blue 24px solid;
+}	
+h3
+{
+    font-size: 110%;
+/* 	border-bottom: 1px solid #000000;  */
+	border-left: orange 36px solid;
+}
+
+h4
+{
+font-size: 100%;
+/* 	border-bottom: 1px solid #000000;  */
+	border-left: black 48px solid;
+	padding-left: 10px;
+}
+
+h5
+{
+	border-left: black 60px solid;
+}
+
+table
+{
+	bodrder-color:#000;
+ border-collapse: collapse;
+	border-bottom: 2px solid; 
+	border-top: 2px solid; 
+ 	width: 60%;
+		text-align: center;
+}
+
+th
+{
+	border-bottom: 2px solid; 
+}
+
+
+
+	</style>
+
+
+<!-- for math type
+	<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+-->
+	<script type="text/javascript" src="file://localhost/home/yipf/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	</head>
+	<body>
+	<center id='title'><bold>Document for lua-org</bold></center>
+	<center>Pengfei Yi</center>
+	<center>Tue Jun 24 10:26:04 2014</center>
+	
+<div id='toc'><center>Table of Contents</center>SEC
+	1 <a href='#SEC:1'>Introduction</a>
+	2 <a href='#SEC:2'>Properties</a>
+	3 <a href='#SEC:3'>Head lines</a>
+	4 <a href='#SEC:4'>Blocks</a>
+	5 <a href='#SEC:5'>Elements</a>
+		5.1 <a href='#SEC:5.1'>processing elements</a>
+		5.2 <a href='#SEC:5.2'>style elements</a>
+	6 <a href='#SEC:6'>Customization</a>
+	7 <a href='#SEC:7'>Implementation</a>
+	8 <a href='#SEC:8'>Examples</a>
+	9 <a href='#SEC:9'>Summary</a>
+CODE
+	1 <a href='#CODE:1'>Source of this document</a></div>
+
+
+<h1 id='SEC:1'>1 Introduction</h1>
+
+<h1 id='SEC:2'>2 Properties</h1>
+
+<h1 id='SEC:3'>3 Head lines</h1>
+<p>Head lines are text lines leaded by multiple "*"s without any spaces at the beginning. The number of these "*"s imply the level of contents below it. No-empty contents after these "*"s mean the title.</p>
+
+<h1 id='SEC:4'>4 Blocks</h1>
+<p>Blocks are text contents between two same-level <strong><em>head lines</em></strong>. And the title of beginning head is the <strong><em>id</em></strong> of this block, which can be used to reference this block in other places in the document. In fact, if multiple blocks share a same <strong><em>id</em></strong>, this id will point to the one defined last. To end a block immediately, one can insert a head line without title below  the last line of the block. As the whole document is always treated as a block, blocks share the properties below:</p>
+<ul><li>A block can include other blocks.</li>
+<li>A block is directly belong to a certain block.</li>
+<li>Every lines are directly belong to a certain block.</li></ul>
+
+<h1 id='SEC:5'>5 Elements</h1>
+<p>Elements are items embedded in lines which are ebraced by couple of same tags. To make the parser process easier to implemented, these tags are encoded by double punctuates, e.g. "##", "**". According to different types of punctuates, the elements are divided to different types:</p>
+
+<h2 id='SEC:5.1'>5.1 processing elements</h2>
+<p>While the document is processed ,a processing element means that the text content here should be the result of its code other than the text itself. All processing elements are enbraced by a couple of "##". They shared the form of "##<strong><em>protocol</em></strong>:args1[|args2[|args3...]]##". where the <strong><em>protocol</em></strong> here should be:</p>
+<ul><li>ref: the reference of a block by name, e.g. "##ref:Introduction##" makes "<a href='#SEC:1'>1</a>".</li>
+<li>lua: run an lua script, e.g. "##lua:os.date()##" makes "Tue Jun 24 10:26:04 2014".</li>
+<li>...</li></ul>
+
+<h2 id='SEC:5.2'>5.2 style elements</h2>
+<p>Different from processing elements, style elements stand for text contents with styles, e.g.</p>
+<ul><li>"**text**" = <strong><em>text</em></strong></li>
+<li>"$ $text$ $" = \(text\)</li>
+<ul><li>"``text``" = "text"</li></ul>
+<li>...</li></ul>
+<ol><li>adsfafdf</li>
+<li>adfsdfaf</li>
+<li>adfasdfafad</li></ol>
+
+<h1 id='SEC:6'>6 Customization</h1>
+<p>All blocks and elements can be customized for different export file types by modify files named by there files, e.g. if some one wants to modify blocks or elements for "html" files, he can modify "$lua-org-home-dir$/templates/html.lua" or create a new file "my-html.lua" under the directory "$lua-org-home-dir$/templates/".</p>
+
+<h1 id='SEC:7'>7 Implementation</h1>
+<p>Given an input document \(I\), the whole steps producing out put document \(O\) are listed below:</p>
+<ol><li>Parse \(I\) line by line to make a document tree \(T\), which includes blocks and lists.</li>
+<li>Process \(T\) to assign numbers for blocks, including sections and other types of blocks.</li>
+<li>Convert \(T\) to plain document \(D\) applying styles for blocks.</li>
+<li>Processing all elements in \(D\) to make the final output \(O\).</li></ol>
+
+<h1 id='SEC:8'>8 Examples</h1><div id='CODE:1'><p>CODE.1 Source of this document</p>
+<textarea rows=10 cols=100>@PROPS CAPTION="Document for lua-org";	AUTHOR="Pengfei Yi";	DATE="##lua:os.date()##"; 
+
+##toc:SEC|CODE##
+
+* Introduction
+* Properties
+
+* Head lines
+
+Head lines are text lines leaded by multiple ``*``s without any spaces at the beginning. The number of these ``*``s imply the level of contents below it. No-empty contents after these ``*``s mean the title.
+
+* Blocks
+
+Blocks are text contents between two same-level **head lines**. And the title of beginning head is the **id** of this block, which can be used to reference this block in other places in the document. In fact, if multiple blocks share a same **id**, this id will point to the one defined last. To end a block immediately, one can insert a head line without title below  the last line of the block. As the whole document is always treated as a block, blocks share the properties below:
+	- A block can include other blocks.
+	- A block is directly belong to a certain block.
+	- Every lines are directly belong to a certain block.  
+
+* Elements
+Elements are items embedded in lines which are ebraced by couple of same tags. To make the parser process easier to implemented, these tags are encoded by double punctuates, e.g. ``##lua:"\#\#"##``, ``##lua:"\*\*"##``. According to different types of punctuates, the elements are divided to different types:
+** processing elements 
+While the document is processed ,a processing element means that the text content here should be the result of its code other than the text itself. All processing elements are enbraced by a couple of ``##lua:"\#\#"##``. They shared the form of ``##lua:"\#\#"##**protocol**:args1[|args2[|args3...]]##lua:"\#\#"##``. where the **protocol** here should be:
+	- ref: the reference of a block by name, e.g. ``##lua:"\#\#"##ref:Introduction##lua:"\#\#"##`` makes ``##ref:Introduction##``.
+	- lua: run an lua script, e.g. ``##lua:"\#\#"##lua:os.date()##lua:"\#\#"##`` makes ``##lua:os.date()##``.
+	- ...
+** style elements
+Different from processing elements, style elements stand for text contents with styles, e.g. 
+	- ``##lua:"\*\*"##text##lua:"\*\*"##`` = **text**
+	- ``##lua:"\$ \$"##text##lua:"\$ \$"##`` = $$text$$
+		- ``##lua:"\`\`"##text##lua:"\`\`"##`` = ``text``
+	- ...
+	
+	1. adsfafdf
+	1. adfsdfaf
+	1. adfasdfafad
+* Customization
+All blocks and elements can be customized for different export file types by modify files named by there files, e.g. if some one wants to modify blocks or elements for ``html`` files, he can modify ``$lua-org-home-dir$/templates/html.lua`` or create a new file ``my-html.lua`` under the directory ``$lua-org-home-dir$/templates/``.
+* Implementation
+Given an input document $$I$$, the whole steps producing out put document $$O$$ are listed below:
+	1. Parse $$I$$ line by line to make a document tree $$T$$, which includes blocks and lists.
+	2. Process $$T$$ to assign numbers for blocks, including sections and other types of blocks.
+	3. Convert $$T$$ to plain document $$D$$ applying styles for blocks.
+	4. Processing all elements in $$D$$ to make the final output $$O$$.
+* Examples
+**** Source of this document
+@PROPS TYPE="CODE"
+##file:lua-org-doc.org##
+****
+* Summary</textarea>
+</div>
+
+<h1 id='SEC:9'>9 Summary</h1>
+	</body>
+	</html>

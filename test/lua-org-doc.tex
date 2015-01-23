@@ -1,0 +1,138 @@
+% UTF-8 encoding, compile with XeLaTeX
+\documentclass[8pt]{beamer}
+
+
+
+
+\useoutertheme{wuerzburg}
+\useinnertheme[outline]{chamfered}
+\usecolortheme{shark}
+
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{verbatim}
+\usetikzlibrary{arrows,shapes,matrix,calc}
+
+\usepackage{xcolor}
+
+\usepackage{xeCJK}
+\setCJKmainfont{WenQuanYi Zen Hei}
+
+
+\begin{document}
+
+\setbeamerfont{itemize/enumerate body}{size=\normal}
+\setbeamerfont{block title}{size=\normal}
+
+\title{Document for lua-org}
+\subtitle{@SUBTITLE@}
+\author{Pengfei Yi}
+\institute{@INSTITUTE@}
+\date{@YEAR@ 年 @MONTH@ 月 @DAY@ 日}   %添加时间 
+
+{
+\usebackgroundtemplate{%
+\parbox[c][\paperheight][c]{\paperwidth}{\centering\tikz\node[opacity=0.2]{\includegraphics[width=0.7\paperwidth]{logo}};}
+}
+
+\frame{  %第一张ppt为标题页
+	\titlepage
+}
+}
+
+\frame{  %第一张ppt为标题页
+	\tableofcontents
+}
+
+\AtBeginSection[]
+{
+        \begin{frame}<beamer>{当前内容}
+                \tableofcontents[currentsection]
+        \end{frame}
+}
+
+
+
+
+
+\section{Introduction} \label{SEC:1}
+
+
+\section{Properties} \label{SEC:2}
+
+
+\section{Head lines} \label{SEC:3}
+Head lines are text lines leaded by multiple ``*''s without any spaces at the beginning. The number of these ``*''s imply the level of contents below it. No-empty contents after these ``*''s mean the title.
+
+\section{Blocks} \label{SEC:4}
+Blocks are text contents between two same-level {\color{red}head lines}. And the title of beginning head is the {\color{red}id} of this block, which can be used to reference this block in other places in the document. In fact, if multiple blocks share a same {\color{red}id}, this id will point to the one defined last. To end a block immediately, one can insert a head line without title below  the last line of the block. As the whole document is always treated as a block, blocks share the properties below:
+
+\begin{itemize}
+\item{A block can include other blocks.}
+\item{A block is directly belong to a certain block.}
+\item{Every lines are directly belong to a certain block.}
+\end{itemize}
+
+\section{Elements} \label{SEC:5}
+Elements are items embedded in lines which are ebraced by couple of same tags. To make the parser process easier to implemented, these tags are encoded by double punctuates, e.g. ``##'', ``**''. According to different types of punctuates, the elements are divided to different types:
+\frame{
+\frametitle{processing elements}
+While the document is processed ,a processing element means that the text content here should be the result of its code other than the text itself. All processing elements are enbraced by a couple of ``##''. They shared the form of ``##{\color{red}protocol}:args1[|args2[|args3...]]##''. where the {\color{red}protocol} here should be:
+
+\begin{itemize}
+\item{ref: the reference of a block by name, e.g. ``##ref:Introduction##'' makes ``\ref{SEC:1}''.}
+\item{lua: run an lua script, e.g. ``##lua:os.date()##'' makes ``Fri Jun 13 08:39:43 2014''.}
+\item{...}
+\end{itemize}
+}
+
+\frame{
+\frametitle{style elements}
+Different from processing elements, style elements stand for text contents with styles, e.g.
+
+\begin{itemize}
+\item{``**text**'' = {\color{red}text}}
+\item{``$ $text$ $'' = \(text\)}
+
+\begin{itemize}
+\item{````text``'' = ``text''}
+\end{itemize}
+\item{...}
+\end{itemize}
+
+\begin{enumerate}
+\item{adsfafdf}
+\item{adfsdfaf}
+\item{adfasdfafad}
+\end{enumerate}
+}
+
+
+\section{Customization} \label{SEC:6}
+All blocks and elements can be customized for different export file types by modify files named by there files, e.g. if some one wants to modify blocks or elements for ``html'' files, he can modify ``$lua-org-home-dir$/templates/html.lua'' or create a new file ``my-html.lua'' under the directory ``$lua-org-home-dir$/templates/''.
+
+\section{Implementation} \label{SEC:7}
+Given an input document \(I\), the whole steps producing out put document \(O\) are listed below:
+
+\begin{enumerate}
+\item{Parse \(I\) line by line to make a document tree \(T\), which includes blocks and lists.}
+\item{Process \(T\) to assign numbers for blocks, including sections and other types of blocks.}
+\item{Convert \(T\) to plain document \(D\) applying styles for blocks.}
+\item{Processing all elements in \(D\) to make the final output \(O\).}
+\end{enumerate}
+
+\section{Examples} \label{SEC:8}
+CODE.1 Source of this document \label{CODE:1}
+
+\section{Summary} \label{SEC:9}
+
+{
+\usebackgroundtemplate{%
+\parbox[c][\paperheight][c]{\paperwidth}{\centering\tikz\node[opacity=0.2]{\includegraphics[width=0.7\paperwidth]{logo}};}
+}
+\frame{
+	\begin{center}谢谢各位领导和专家！\end{center}
+}
+}
+
+\end{document}
